@@ -24,7 +24,7 @@ If you want to Develop/Modify/Change some Blazor Html/Razor code,
 4. Run the npm install command
 	npm install
 5. Close and Open the Visual Studio
-6. Now you can start modifying the Blazor Razor/HTML code
+
 
 ----------------------------------------------------------
 
