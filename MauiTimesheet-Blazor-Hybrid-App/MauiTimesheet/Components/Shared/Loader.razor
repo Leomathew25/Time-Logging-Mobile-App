@@ -1,0 +1,23 @@
+﻿@implements IDisposable 
+
+@if (_showLoader)
+{
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="rounded-lg bg-white p-5 shadow-xl">
+            <div class="h-6 w-6 animate-spin rounded-full border-b-2 border-purple-600"></div>
+        </div>
+    </div>
+}
+@code {
+    private bool _showLoader = true;
+    protected override void OnInitialized() =>
+        CommonState.ToggleLoader += HandleLoaderVisibility;
+
+    private void HandleLoaderVisibility(bool showLoader)
+    {
+        _showLoader = showLoader;
+        StateHasChanged();
+    }
+
+    public void Dispose() => CommonState.ToggleLoader -= HandleLoaderVisibility;
+}

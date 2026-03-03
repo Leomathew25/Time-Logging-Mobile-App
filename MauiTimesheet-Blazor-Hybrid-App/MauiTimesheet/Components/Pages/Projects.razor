@@ -1,0 +1,76 @@
+﻿@page "/projects"
+
+@inject ProjectsService ProjectsService
+
+<div class="flex h-full w-full flex-col gap-5 p-3">
+    <div class="flex items-center justify-between">
+        <h1 class="text-xl font-bold text-gray-800">Projects</h1>
+        <button type="button" class="app-btn" @onclick="() => _project = new()">+ New Project</button>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+        @if (ProjectsService.Projects.Count == 0)
+        {
+            <p class="my-60 text-center text-3xl text-slate-500">No projects found</p>
+        }
+        else
+        {
+            foreach (var p in ProjectsService.Projects)
+            {
+                <div class="mb-4 flex w-full justify-between gap-2 rounded-lg bg-white p-3 shadow">
+                    <div class="space-y-3">
+                        <label class="block h-4 w-4 rounded-full" style="background-color: @p.Color"></label>
+                        <h4 class="font-semibold">@p.Name</h4>
+                        @if (!string.IsNullOrWhiteSpace(p.Description))
+                        {
+                            <p class="text-sm text-gray-600">@p.Description</p>
+                        }
+                    </div>
+                    <div class="flex min-h-16 flex-col items-center justify-between">
+                        <button type="button" class="h-6 w-6" @onclick="() => HandleDeleteProjectAsync(p.Id)">
+                            <img src="images/trash.svg" />
+                        </button>
+                        <button type="button" class="h-6 w-6" @onclick="() => _project = p">
+                            <img src="images/pencil.svg" />
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>
+
+@if (_project is not null)
+{
+    <SaveProjectForm Project="_project"
+                     OnClose="@(() => _project = null)"
+                     OnAfterSave="HandleProjectSave" />
+}
+
+@code {
+    private ProjectModel? _project;
+
+    protected override async Task OnInitializedAsync()
+    {
+        CommonState.ShowLoader();
+        if (ProjectsService.Projects.Count == 0)
+            await ProjectsService.LoadProjectsAsync();
+        CommonState.HideLoader();
+    }
+
+    private void HandleProjectSave()
+    {
+        _project = null;
+        StateHasChanged();
+    }
+
+    private async Task HandleDeleteProjectAsync(int projectId)
+    {
+        if(await MauiInterop.ConfirmAsync("Are you sure, you want to delete this project?", "Confirm Delete?"))
+        {
+            CommonState.ShowLoader();
+            await ProjectsService.DeleteProjectAsync(projectId);
+            CommonState.HideLoader();
+        }
+    }
+}

@@ -1,0 +1,27 @@
+﻿@inherits LayoutComponentBase
+
+
+<div class="flex h-screen w-screen flex-col items-center justify-center gap-4 p-4">
+    <div class="w-full">
+        <div class="text-center">
+            <div class="mx-auto mb-4 h-20 w-20">
+                <img src="images/logo.png" />
+            </div>
+            <h1 class="text-2xl font-bold">Maui Timesheet</h1>
+        </div>
+        <div class="mb-10 mt-4 w-full rounded-lg bg-white p-6 shadow-lg">
+            <h2 class="text-center text-xl font-bold">
+                <SectionOutlet SectionName="title" />
+            </h2>
+            @Body
+        </div>
+        <div class="space-y-6 text-center">
+            <SectionOutlet SectionName="loginRegisterText" />
+            <SectionOutlet SectionName="loginRegisterLink" />
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

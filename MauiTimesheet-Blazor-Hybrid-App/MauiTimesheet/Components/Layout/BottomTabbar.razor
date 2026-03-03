@@ -1,0 +1,70 @@
+﻿@implements IDisposable
+
+@inject NavigationManager NavigationManager 
+
+<div class="flex w-full items-center justify-around">
+    @foreach(var tabItem in _tabItems)
+    {
+        <button @onclick="() => ChangeTab(tabItem)"
+            class="flex flex-col items-center justify-center rounded-lg px-2 py-2 @(tabItem.IsActive ? "bg-blue-100" : "")">
+                <img src="@tabItem.Icon" class="mb-1 h-4 w-4" />
+            <span class="text-xs text-gray-500 @(tabItem.IsActive ? "font-medium text-gray-700" : "")">@tabItem.Name</span>
+        </button>
+    }
+</div>
+
+@code {
+    private TabItem[] _tabItems = [
+    new TabItem("images/dashboard.svg", "Dashboard", true, "dashboard"),
+        new TabItem("images/folder.svg", "Projects", false, "projects"),
+        new TabItem("images/clock.svg", "Log Time", false, "log-time"),
+    ];
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        // https://0.0.0.1/dashboard
+        string? tabUrl = null;
+        if (e.Location.EndsWith("dashboard"))
+            tabUrl = "dashboard";
+        else if (e.Location.EndsWith("projects"))
+            tabUrl = "projects";
+        else if (e.Location.EndsWith("log-time"))
+            tabUrl = "log-time";
+
+        if(tabUrl != null)
+        {
+            var tabToActive = _tabItems.First(t => t.Link == tabUrl);
+            ChangeTab(tabToActive);
+            StateHasChanged();
+        }
+    }
+
+    private void ChangeTab(TabItem tabItem)
+    {
+        if (tabItem.IsActive)
+            return;
+
+        var existingActiveTab = _tabItems.First(t => t.IsActive);
+        existingActiveTab.IsActive = false;
+
+        tabItem.IsActive = true;
+        NavigationManager.NavigateTo(tabItem.Link);
+    }
+
+    public void Dispose() => NavigationManager.LocationChanged -= OnLocationChanged;
+
+    private class TabItem(string image, string name, bool isActive, string link)
+    {
+        public string Image { get; } = image;
+        public string Name { get; } = name;
+        public bool IsActive { get; set; } = isActive;
+        public string Link { get; } = link;
+
+        public string Icon => !IsActive ? Image : Image.Replace(".svg", "-thick.svg");
+    }
+}

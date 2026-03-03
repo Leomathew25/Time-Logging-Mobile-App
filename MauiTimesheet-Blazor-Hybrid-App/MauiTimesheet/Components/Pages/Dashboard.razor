@@ -1,0 +1,70 @@
+﻿@page "/dashboard"
+
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+@inject TimeLogService TimeLogService
+
+<div class="flex h-full w-full flex-col gap-5 p-3">
+    <div class="flex-1 overflow-y-auto">
+        <h1 class="mb-3 w-full text-xl font-bold text-gray-800">Dashboard</h1>
+        <div class="mb-4 flex items-center gap-3 rounded-lg bg-white p-3 shadow-lg">
+            <div class="flex items-center justify-center rounded-lg bg-green-100 p-4">
+                <label class="text-center text-2xl font-bold">@_summaryHours.Todays.ToFormattedTime()</label>
+            </div>
+            <div class="space-y-4">
+                <label class="text-2xl font-medium">Todays Hours</label>
+                <p class="text-xs">Total hours logged for today, @DateTime.Now.Date.ToString("ddd, MMMM dd, yyyy")</p>
+            </div>
+        </div>
+        <div class="mb-4 flex gap-3 rounded-lg bg-white p-3 shadow-lg">
+            <div class="flex items-center justify-center rounded-lg bg-blue-100 p-4">
+                <label class="text-center text-2xl font-bold">@_summaryHours.ThisWeek.ToFormattedTime()</label>
+            </div>
+            <div class="space-y-4">
+                <label class="text-2xl font-medium">This Week</label>
+                <p class="text-xs">Total hours logged for this week, starting from Monday till Today</p>
+            </div>
+        </div>
+        <div class="mb-4 flex gap-3 rounded-lg bg-white p-3 shadow-lg">
+            <div class="flex items-center justify-center rounded-lg bg-purple-100 p-4">
+                <label class="text-center text-2xl font-bold">@_summaryHours.ThisMonth.ToFormattedTime()</label>
+            </div>
+            <div class="space-y-4">
+                <label class="text-2xl font-medium">This Month</label>
+                <p class="text-xs">Total hours logged for this month, starting from 1st of this month till Today</p>
+            </div>
+        </div>
+
+        <div class="mb-4 flex flex-col gap-3 rounded-lg bg-white p-3 shadow-lg">
+            <h5 class="text-lg font-medium">Recent entries</h5>
+            <TimeLogDisplayList Entries="_recentEntries" />
+        </div>
+        <div class="flex w-full justify-center">
+            <button type="button" class="mx-auto rounded-xl bg-red-500 px-14 py-2 text-white" @onclick="Logout">Logout</button>
+        </div>
+    </div>
+</div>
+
+@* <button class="" @onclick="Logout">Logout</button> *@
+@code {
+    private SummaryHours _summaryHours;
+    private IEnumerable<TimeLogListModel> _recentEntries = [];
+    protected override async Task OnInitializedAsync()
+    {
+        CommonState.ShowLoader();
+        _summaryHours = await TimeLogService.GetSummaryAsync(DateTime.Now.Date);
+        _recentEntries = await TimeLogService.GetRecentEntriesAsync(5);
+        CommonState.HideLoader();
+    }
+
+    private async Task Logout()
+    {
+        if (await MauiInterop.ConfirmAsync("Are you sure, you want to logout?", "Confirm Logout?"))
+        {
+            CommonState.ShowLoader();
+            AuthService.Logout();
+            NavigationManager.NavigateTo("login", replace: true);
+            CommonState.HideLoader();
+        }
+    }
+}

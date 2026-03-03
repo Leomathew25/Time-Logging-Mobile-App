@@ -1,0 +1,48 @@
+﻿
+<ul>
+    @foreach (var t in Entries)
+    {
+        <li class="mb-3 border-l-4 bg-gray-100 p-3" style="border-color: @t.ProjectColor">
+            <div class="flex items-center gap-2">
+                <div class="flex-1">
+                    <label class="text-xs font-medium">@t.ProjectName</label>
+                    <label class="block text-sm text-gray-700">@t.Task</label>
+                </div>
+                <label class="font-bold text-gray-800">@t.Hours.ToFormattedTime()</label>
+                @if (ShowDeleteOption)
+                {
+                    <button type="button" class="" @onclick="() => HandleTaskDeleteAsync(t.Id)">
+                        <img src="images/trash.svg" />
+                    </button>
+                }
+            </div>
+            @if (!string.IsNullOrWhiteSpace(t.Description))
+            {
+                <p class="text-xs text-gray-600">@t.Description</p>
+            }
+        </li>
+    }
+    @if (ShowTotal)
+    {
+        <li class="flex justify-end">
+            <label class="w-full text-end font-medium">Total hours: @Entries.Sum(e => e.Hours).ToFormattedTime() </label>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter, EditorRequired]
+    public IEnumerable<TimeLogListModel> Entries { get; set; } = [];
+
+    [Parameter]
+    public bool ShowTotal { get; set; }
+
+    [Parameter]
+    public bool ShowDeleteOption { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+
+    private async Task HandleTaskDeleteAsync(int timeLogId) =>
+    await OnDelete.InvokeAsync(timeLogId);
+}

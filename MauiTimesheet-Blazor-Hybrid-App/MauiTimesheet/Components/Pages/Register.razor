@@ -1,0 +1,57 @@
+﻿@page "/register"
+
+@using MauiTimesheet.Components.Layout
+
+@layout AuthLayout
+
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+
+<SectionContent SectionName="title">Register</SectionContent>
+<SectionContent SectionName="loginRegisterText">
+    <p>Already have an account?</p>
+</SectionContent>
+<SectionContent SectionName="loginRegisterLink">
+    <NavLink href="login" class="mt-3 text-blue-600">Login to your account</NavLink>
+</SectionContent>
+
+<EditForm Model="_model" OnValidSubmit="RegisterAsync">
+    <DataAnnotationsValidator />
+    <div class="mb-4">
+        <label class="app-label">Full name</label>
+        <InputText @bind-Value="_model.FullName" placeholder="Enter your name" 
+        class="app-input"/>
+        <ValidationMessage For="()=> _model.FullName" class="text-red-500 mt-2 text-xs"/>
+    </div>
+    <div class="mb-4">
+        <label class="app-label">Username</label>
+        <InputText @bind-Value="_model.Username" placeholder="Enter username" 
+        class="app-input"/>
+        <ValidationMessage For="()=> _model.Username" class="text-red-500 mt-2 text-xs"/>
+    </div>
+    <div class="mb-4">
+        <label class="app-label">Password</label>
+        <InputText type="password" @bind-Value="_model.Password" placeholder="Enter password" 
+        class="app-input"/>
+        <ValidationMessage For="()=> _model.Password" class="text-red-500 mt-2 text-xs"/>
+    </div>
+    <button type="submit" class="app-btn-full">Create Account</button>
+</EditForm>
+
+@code {
+    private RegisterModel _model = new();
+
+    protected override void OnInitialized()
+    {
+        CommonState.HideLoader();
+    }
+
+    private async Task RegisterAsync()
+    {
+        CommonState.ShowLoader();
+        await AuthService.RegisterAsync(_model);
+        await MauiInterop.AlertAsync("User account created", "Success");
+        NavigationManager.NavigateTo("login", replace: true);
+        CommonState.HideLoader();
+    }
+}

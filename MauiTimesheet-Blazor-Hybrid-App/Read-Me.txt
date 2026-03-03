@@ -1,0 +1,30 @@
+
+
+--------------------------------------------------------
+This is an Offline Time Logging Timesheet Mobile App built for Android and iOS using .NET MAUI Balzor Hybrid + Tailwind Css3 + SQLite - .NET 9
+----------
+
+Running the App
+
+1. Extract the code
+
+2. Select the Emulator/Physical-Device to run the project
+
+2. Run the Maui App
+
+Thats all, you are good to go
+
+----------
+If you want to Develop/Modify/Change some Blazor Html/Razor code, 
+
+1. Install this VS Extension in Visual Studio 2022 
+	VS Extension - Tailwind CSS VS2022 Editor Support - https://marketplace.visualstudio.com/items?itemName=TheronWang.TailwindCSSIntellisense 
+2. you will need to install Node js (if not already installed)
+3. Open Command Prompt/Terminal on the FullNotesBlazingMaui.Shared project folder (where the package.json file is)
+4. Run the npm install command
+	npm install
+5. Close and Open the Visual Studio
+6. Now you can start modifying the Blazor Razor/HTML code
+
+----------------------------------------------------------
+

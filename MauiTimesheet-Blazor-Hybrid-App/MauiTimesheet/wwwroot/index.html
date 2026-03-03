@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>MauiTimesheet</title>
+    <base href="/" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            background-color: #F2F2F7;
+        }
+
+        .status-bar-safe-area {
+            display: none;
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            .status-bar-safe-area {
+                display: flex;
+                position: sticky;
+                top: 0;
+                height: env(safe-area-inset-top);
+                background-color: #FFFFFF;
+                width: 100%;
+                z-index: 1;
+            }
+
+            .h-screen {
+                height: calc(100vh - env(safe-area-inset-top))
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <div class="status-bar-safe-area"></div>
+
+    <div id="app" class="h-full w-full">
+        <div class="fixed bottom-0 left-0 right-0 top-0 z-10 flex flex-col items-center justify-center gap-5">
+            <img src="images/logo.png" class="h-32 w-32" />
+            <h2 class="text-4xl font-bold text-blue-600">Maui Timesheet</h2>
+        </div>
+    </div>
+
+    <script src="_framework/blazor.webview.js" autostart="false"></script>
+
+</body>
+
+</html>

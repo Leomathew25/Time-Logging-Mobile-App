@@ -1,0 +1,16 @@
+﻿@page "/"
+@using MauiTimesheet.Components.Layout
+
+@layout EmptyLayout 
+
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+@code {
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsLoggedIn)
+            NavigationManager.NavigateTo("login");
+        else
+            NavigationManager.NavigateTo("dashboard");
+    }
+}

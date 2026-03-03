@@ -1,0 +1,19 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+    .app-input {
+      @apply w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 focus:outline-0 focus:ring-0}
+
+    .app-btn-full {
+        @apply w-full rounded-lg bg-blue-500 px-4 py-2 font-medium text-white}
+    .app-label {
+        @apply mb-1 block text-sm font-medium text-gray-500}
+
+    .app-validation-msg{
+        @apply mt-2 text-sm text-red-500;
+    }
+    .app-btn {
+        @apply rounded-lg bg-blue-500 px-6 py-2 font-medium text-white}
+}
